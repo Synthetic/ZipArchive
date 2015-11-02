@@ -40,6 +40,11 @@
 + (BOOL)createZipFileAtPath:(NSString *)path withContentsOfDirectory:(NSString *)directoryPath;
 + (BOOL)createZipFileAtPath:(NSString *)path withContentsOfDirectory:(NSString *)directoryPath keepParentDirectory:(BOOL)keepParentDirectory;
 
++ (BOOL)createZipFileAtPath:(NSString *)path
+	withContentsOfDirectory:(NSString *)directoryPath
+		keepParentDirectory:(BOOL)keepParentDirectory
+			progressHandler:(void (^)(long entryNumber, long total))progressHandler;
+
 - (instancetype)initWithPath:(NSString *)path;
 @property (NS_NONATOMIC_IOSONLY, readonly) BOOL open;
 - (BOOL)writeFile:(NSString *)path;

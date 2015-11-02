@@ -396,8 +396,11 @@
     return [self createZipFileAtPath:path withContentsOfDirectory:directoryPath keepParentDirectory:NO];
 }
 
-
 + (BOOL)createZipFileAtPath:(NSString *)path withContentsOfDirectory:(NSString *)directoryPath keepParentDirectory:(BOOL)keepParentDirectory {
+	return [self createZipFileAtPath:path withContentsOfDirectory:directoryPath keepParentDirectory:keepParentDirectory progressHandler:nil];
+}
+
++ (BOOL)createZipFileAtPath:(NSString *)path withContentsOfDirectory:(NSString *)directoryPath keepParentDirectory:(BOOL)keepParentDirectory progressHandler:(void (^)(long, long))progressHandler {
     BOOL success = NO;
     
     NSFileManager *fileManager = nil;
@@ -408,6 +411,8 @@
         fileManager = [[NSFileManager alloc] init];
         NSDirectoryEnumerator *dirEnumerator = [fileManager enumeratorAtPath:directoryPath];
         NSString *fileName;
+		NSInteger entry = 0;
+		NSInteger total = [[dirEnumerator allObjects] count];
         while ((fileName = [dirEnumerator nextObject])) {
             BOOL isDir;
             NSString *fullFilePath = [directoryPath stringByAppendingPathComponent:fileName];
@@ -429,6 +434,11 @@
                     [[NSFileManager defaultManager] removeItemAtPath:tempName error:nil];
                 }
             }
+			
+			if (progressHandler) {
+				progressHandler(entry, total);
+			}
+			entry++;
         }
         success = [zipArchive close];
     }
