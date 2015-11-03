@@ -409,11 +409,10 @@
     if ([zipArchive open]) {
         // use a local filemanager (queue/thread compatibility)
         fileManager = [[NSFileManager alloc] init];
-        NSDirectoryEnumerator *dirEnumerator = [fileManager enumeratorAtPath:directoryPath];
-        NSString *fileName;
-		NSInteger entry = 0;
-		NSInteger total = [[dirEnumerator allObjects] count];
-        while ((fileName = [dirEnumerator nextObject])) {
+        NSArray *directoryFiles = [fileManager contentsOfDirectoryAtPath:directoryPath error:nil];
+        NSInteger entry = 0;
+        NSInteger total = [directoryFiles count];
+        for (__strong NSString *fileName in directoryFiles) {
             BOOL isDir;
             NSString *fullFilePath = [directoryPath stringByAppendingPathComponent:fileName];
             [fileManager fileExistsAtPath:fullFilePath isDirectory:&isDir];
@@ -434,11 +433,11 @@
                     [[NSFileManager defaultManager] removeItemAtPath:tempName error:nil];
                 }
             }
-			
-			if (progressHandler) {
-				progressHandler(entry, total);
-			}
-			entry++;
+            
+            if (progressHandler) {
+                progressHandler(entry, total);
+            }
+            entry++;
         }
         success = [zipArchive close];
     }
