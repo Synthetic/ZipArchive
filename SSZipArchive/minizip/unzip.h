@@ -70,7 +70,7 @@ typedef unzFile__ *unzFile;
 typedef voidp unzFile;
 #endif
 
-#include "../Common.h"
+#include "Common.h"
 
 #define UNZ_OK                          (0)
 #define UNZ_END_OF_LIST_OF_FILE         (-100)
